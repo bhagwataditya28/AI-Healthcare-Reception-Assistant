@@ -1,4 +1,4 @@
-
+import streamlit as st
 import os
 import json
 from dotenv import load_dotenv
@@ -10,8 +10,20 @@ from prompt_templates import SYSTEM_PROMPT
 # Load environment variables
 load_dotenv()
 
-API_KEY = os.getenv("GEMINI_API_KEY")
-MODEL = os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+try:
+    STREAMLIT_SECRETS = st.secrets
+except Exception:
+    STREAMLIT_SECRETS = {}
+
+API_KEY = (
+    os.getenv("GEMINI_API_KEY")
+    or STREAMLIT_SECRETS.get("GEMINI_API_KEY")
+)
+
+MODEL = (
+    os.getenv("GEMINI_MODEL")
+    or STREAMLIT_SECRETS.get("GEMINI_MODEL", "gemini-3.8-flash")
+)
 
 EMERGENCY_KEYWORDS = [
     "chest pain",
